@@ -1,6 +1,7 @@
 NAME = Sokoban
 
-SRCS = main.c
+SRCS = 	main.c \
+		Functions/level.c
 
 all: $(NAME)
 
