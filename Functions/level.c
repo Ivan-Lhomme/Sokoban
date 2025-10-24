@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "entity.h"
 
 char ** import_level(int lvl_number) {
     char file_path[19];
@@ -38,6 +39,51 @@ char ** import_level(int lvl_number) {
     }
 
     level[i] = NULL;
+
+    return level;
+}
+
+char ** draw_entity(char ** level, entity * player, entity * boxes[], entity * targets[]) {
+    int x = 0;
+    int z = 0;
+    entity * box;
+
+    while (level[x] != NULL) {
+        z = 0;
+        while (level[x][z] != '\0') {
+            
+            if ((player->pos_x == x) && (player->pos_z == z)) {
+
+                if (level[player->last_pos_x][player->last_pos_z] == 'O') {
+                    level[player->last_pos_x][player->last_pos_z] = ' ';
+                    player->last_pos_x = player->pos_x;
+                    player->last_pos_z = player->pos_z;
+                }
+
+                level[x][z] = player->symbole;
+            } else {
+                box = find_entity(boxes, x, z);
+
+                if (box != 0) {
+                    level[x][z] = box->symbole;
+                }
+            }
+
+            z++;
+        }
+
+        x++;
+    }
+
+    int i = 0;
+
+    while (targets[i] != NULL) {
+        if ((level[targets[i]->pos_x][targets[i]->pos_z] != 'X') && (level[targets[i]->pos_x][targets[i]->pos_z] != 'O')) {
+            level[targets[i]->pos_x][targets[i]->pos_z] = targets[i]->symbole;
+        }
+
+        i++;
+    }
 
     return level;
 }
