@@ -10,49 +10,75 @@ int main()
 	system("clear");
 	printf("Bienvenue dans mon Sokoban fait maison !\n");
 
-	int win = -1;
+	int win;
+	int verif;
 
 	char direction;
+	char restart;
 
-	char ** level = import_level(1);
+	char ** level;
 
-	entity * player = create_entity(2, 2, 'o');
-	entity * box1 = create_entity(3, 3, 'X');
-	entity * target1 = create_entity(8, 8, '.');
-	entity * boxes[] = {box1, NULL};
-	entity * targets[] = {target1, NULL};
+	entity * player;
+	entity * box1;
+	entity * target1;
+	entity * boxes[2];
+	entity * targets[2];
 
 	int count_t[] = {0, 0, 0, 0};
-	count_entity_wall(targets, count_t);
 
-	while (win == -1) {
-		draw_entity(level, player, boxes, targets);
-		display_level(level);
+	do {
+		win = -1;
+		level = import_level(1);
 
-		printf("Entrer une direction (zqsd) :\n");
-		scanf("%c", &direction);
-		move(level, player, direction, boxes);
+		player = create_entity(2, 2, 'o');
+		box1 = create_entity(3, 3, 'X');
+		target1 = create_entity(8, 8, '.');
 
-		win = is_winning(boxes, targets);
+		boxes[0] = box1; boxes[1] = NULL;
+		targets[0] = target1; targets[1] = NULL;
 
-		if (win == -1) {
-			win = is_loosing(level, boxes, count_t);
+		count_entity_wall(targets, count_t);
+
+		while (win == -1) {
+			draw_entity(level, player, boxes, targets);
+			display_level(level);
+
+			do {
+				printf("Entrer une direction (zqsd) :\n");
+				verif = scanf("%c", &direction);
+
+				while (getchar() != '\n') {}
+			} while (verif == 0);
+
+			move(level, player, direction, boxes);
+
+			win = is_winning(boxes, targets);
+
+			if (win == -1) {
+				win = is_loosing(level, boxes, count_t);
+			}
+
+			system("clear");
 		}
 
+		draw_entity(level, player, boxes, targets);
+		display_level(level);
+		save_level(level);
+
+		if (win == 1) {
+			printf("Bien joue, vous avez gagne !\n");
+		} else if (win == 0) {
+			printf("Dommage, vous avez bloque la caisse.\n");
+		} else {
+			printf("Petit probleme technique !\n");
+		}
+
+		printf("Si tu veux recommence entre 'y' sinon n'importe quel lettre.\n");
+		verif = scanf("%c", &restart);
+
+		while (getchar() != '\n') {}
 		system("clear");
-	}
-
-	draw_entity(level, player, boxes, targets);
-	display_level(level);
-	save_level(level);
-
-	if (win == 1) {
-		printf("Bien joue, vous avez gagne !\n");
-	} else if (win == 0) {
-		printf("Dommage, vous avez bloque la caisse.\n");
-	} else {
-		printf("Petit probleme technique !\n");
-	}
+	} while (restart == 'y');
 
 	int i = 0;
 	while (boxes[i] != NULL) {
