@@ -15,5 +15,6 @@ struct s_entity
 int move(char ** level, entity * e, char direction, entity * boxes[]);
 entity * create_entity(int x, int z, char symbole);
 void * find_entity(entity * entity[], int x, int z);
+void count_entity_wall(entity * entity[], int count[]);
 
 #endif

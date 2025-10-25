@@ -2,7 +2,8 @@ NAME = Sokoban
 
 SRCS = 	main.c \
 		Functions/level.c \
-		Functions/entity.c
+		Functions/entity.c \
+		Functions/win_defeat.c
 
 all: $(NAME)
 

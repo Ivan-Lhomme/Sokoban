@@ -75,3 +75,23 @@ entity * create_entity(int x, int z, char symbole) {
 
     return entity;
 }
+
+void count_entity_wall(entity * entity[], int count[]) {
+    int i = 0;
+
+    while (entity[i] != NULL) {
+        if (entity[i]->pos_x == 1) {
+            count[0]++;
+        } else if (entity[i]->pos_x == 8) {
+            count[1]++;
+        }
+        
+        if (entity[i]->pos_z == 1) {
+            count[2]++;
+        } else if (entity[i]->pos_z == 8) {
+            count[3]++;
+        }
+
+        i++;
+    }
+}
