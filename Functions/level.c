@@ -54,7 +54,7 @@ char ** draw_entity(char ** level, entity * player, entity * boxes[], entity * t
             
             if ((player->pos_x == x) && (player->pos_z == z)) {
 
-                if (level[player->last_pos_x][player->last_pos_z] == 'O') {
+                if (level[player->last_pos_x][player->last_pos_z] == 'o') {
                     level[player->last_pos_x][player->last_pos_z] = ' ';
                     player->last_pos_x = player->pos_x;
                     player->last_pos_z = player->pos_z;
@@ -95,4 +95,17 @@ void display_level(char ** level) {
         printf("%s\n", level[i]);
         i++;
     }
+}
+
+void save_level (char ** level) {
+    FILE * save_file = fopen("Levels/end.txt", "w");
+    int i = 0;
+
+    while (level[i] != NULL) {
+        fprintf(save_file, "%s\n", level[i]);
+
+        i++;
+    }
+
+    fclose(save_file);
 }

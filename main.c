@@ -16,7 +16,7 @@ int main()
 
 	char ** level = import_level(1);
 
-	entity * player = create_entity(2, 2, 'O');
+	entity * player = create_entity(2, 2, 'o');
 	entity * box1 = create_entity(3, 3, 'X');
 	entity * target1 = create_entity(8, 8, '.');
 	entity * boxes[] = {box1, NULL};
@@ -44,6 +44,7 @@ int main()
 
 	draw_entity(level, player, boxes, targets);
 	display_level(level);
+	save_level(level);
 
 	if (win == 1) {
 		printf("Bien joue, vous avez gagne !\n");
