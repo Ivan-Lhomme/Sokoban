@@ -23,7 +23,7 @@ char ** import_level(int lvl_number) {
 
     fclose(fp);
 
-    char ** level = malloc(sizeof(*level));
+    char ** level = NULL;
     char * line;
     int i = 0;
 
@@ -31,8 +31,9 @@ char ** import_level(int lvl_number) {
 
 
     while (line != NULL) {
-        level[i] = malloc(strlen(line) * sizeof(char));
-        level[i] = line;
+        level = realloc(level, (i+2) * sizeof(line));
+        level[i] = malloc((strlen(line) + 1) * sizeof(char));
+        strcpy(level[i], line);
 
         line = strtok(NULL, "\n");
         i++;
@@ -54,11 +55,12 @@ char ** draw_entity(char ** level, entity * player, entity * boxes[], entity * t
             
             if ((player->pos_x == x) && (player->pos_z == z)) {
 
-                if (level[player->last_pos_x][player->last_pos_z] == 'o') {
+                if (level[player->last_pos_x][player->last_pos_z] == player->symbole) {
                     level[player->last_pos_x][player->last_pos_z] = ' ';
-                    player->last_pos_x = player->pos_x;
-                    player->last_pos_z = player->pos_z;
                 }
+
+                player->last_pos_x = player->pos_x;
+                player->last_pos_z = player->pos_z;
 
                 level[x][z] = player->symbole;
             } else {
@@ -78,7 +80,7 @@ char ** draw_entity(char ** level, entity * player, entity * boxes[], entity * t
     int i = 0;
 
     while (targets[i] != NULL) {
-        if ((level[targets[i]->pos_x][targets[i]->pos_z] != 'X') && (level[targets[i]->pos_x][targets[i]->pos_z] != 'O')) {
+        if ((level[targets[i]->pos_x][targets[i]->pos_z] != 'X') && (level[targets[i]->pos_x][targets[i]->pos_z] != player->symbole)) {
             level[targets[i]->pos_x][targets[i]->pos_z] = targets[i]->symbole;
         }
 

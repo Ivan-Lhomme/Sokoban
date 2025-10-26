@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "entity.h"
+#include "level.h"
 
 void * find_entity(entity * entity[], int x, int z) {
     int i = 0;
@@ -62,7 +64,61 @@ int move(char ** level, entity * e, char direction, entity * boxes[]) {
     return 1;
 }
 
-entity * create_entity(int x, int z, char symbole) {
+entity ** create_entities(char symbole, entity * entities[], int nbr_entities, int ** coordinates, int indice) {
+    srand(time(NULL));
+
+    entities = realloc(entities, (nbr_entities + 1) * sizeof(*entities));
+
+    int x;
+    int z;
+
+
+    int i = 0;
+
+    while (i < nbr_entities) {
+        if (symbole == 'X') {
+            x = (rand() % (LENGTH - 4)) + 2;
+            z = (rand() % (WIDTH - 4)) + 2;
+        } else {
+            x = (rand() % (LENGTH - 2)) + 1;
+            z = (rand() % (WIDTH - 2)) + 1;
+        }
+
+        if (in_matrix(coordinates, x, z) == 0) {
+            entities[i] = create_entity(symbole, x, z, coordinates, indice + i);
+
+            i++;
+        }
+    }
+
+    entities[i] = NULL;
+
+    return entities;
+}
+
+int in_matrix(int ** coordone, int x, int z) {
+    int find = 0;
+    int i = 0;
+
+    while ((find == 0) && (coordone[i] != NULL)) {
+        if ((coordone[i][0] == x) && (coordone[i][1] == z)) {
+            find = 1;
+        }
+
+        i++;
+    }
+
+    return find;
+}
+
+entity * create_entity(char symbole, int x, int z, int ** coordinates, int indice) {
+    coordinates[indice] = malloc(2 * sizeof(int));
+    if (x == -1) {
+        srand(time(NULL));
+        x = (rand() % (LENGTH - 2)) + 1;
+        z = (rand() % (WIDTH - 2)) + 1;
+    }
+
     entity * entity = malloc(sizeof(*entity));
 
     entity->last_pos_x = x;
@@ -72,6 +128,9 @@ entity * create_entity(int x, int z, char symbole) {
     entity->pos_z = z;
     
     entity->symbole = symbole;
+
+    coordinates[indice][0] = x;
+    coordinates[indice][1] = z;
 
     return entity;
 }

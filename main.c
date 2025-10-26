@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include "Functions/level.h"
 #include "Functions/entity.h"
 #include "Functions/win_defeat.h"
@@ -12,6 +13,9 @@ int main()
 
 	int win;
 	int verif;
+	int nbr_entities;
+
+	int ** coordinates;
 
 	char direction;
 	char restart;
@@ -19,23 +23,27 @@ int main()
 	char ** level;
 
 	entity * player;
-	entity * box1;
-	entity * target1;
-	entity * boxes[2];
-	entity * targets[2];
+	entity ** boxes = malloc(sizeof(*boxes));
+	entity ** targets = malloc(sizeof(*targets));
 
 	int count_t[] = {0, 0, 0, 0};
 
 	do {
+		srand(time(NULL));
+
 		win = -1;
 		level = import_level(1);
+		nbr_entities = (rand() % 5) + 1;
 
-		player = create_entity(2, 2, 'o');
-		box1 = create_entity(3, 3, 'X');
-		target1 = create_entity(8, 8, '.');
+		coordinates = malloc((nbr_entities * 2 + 2) * sizeof(int *));
+		for (int i = 0; i < nbr_entities * 2 + 2; i++) {
+			coordinates[i] = NULL;
+		}
 
-		boxes[0] = box1; boxes[1] = NULL;
-		targets[0] = target1; targets[1] = NULL;
+		player = create_entity('o', -1, -1, coordinates, 0);
+
+		boxes = create_entities('X', boxes, nbr_entities, coordinates, 1);
+		targets = create_entities('.', targets, nbr_entities, coordinates, nbr_entities + 1);
 
 		count_entity_wall(targets, count_t);
 
@@ -52,10 +60,10 @@ int main()
 
 			move(level, player, direction, boxes);
 
-			win = is_winning(boxes, targets);
+			win = is_winning(boxes, targets, nbr_entities);
 
 			if (win == -1) {
-				win = is_loosing(level, boxes, count_t);
+				win = is_loosing(level, boxes, count_t, targets);
 			}
 
 			system("clear");
@@ -87,6 +95,13 @@ int main()
 
 		i++;
 	}
+	free(boxes);
+	free(targets);
+
+	for (int i = 0; i < (nbr_entities * 2 + 1); i++) {
+        free(coordinates[i]);
+    }
+    free(coordinates);
 
 	free(level);
 
