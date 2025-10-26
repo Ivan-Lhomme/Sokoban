@@ -26,7 +26,7 @@ int main()
 	entity ** boxes = malloc(sizeof(*boxes));
 	entity ** targets = malloc(sizeof(*targets));
 
-	int count_t[] = {0, 0, 0, 0};
+	int count_t[4];
 
 	do {
 		srand(time(NULL));
@@ -34,6 +34,9 @@ int main()
 		win = -1;
 		level = import_level(1);
 		nbr_entities = (rand() % 5) + 1;
+		for (int i = 0; i < 4; i++) {
+			count_t[i] = 0;
+		}
 
 		coordinates = malloc((nbr_entities * 2 + 2) * sizeof(int *));
 		for (int i = 0; i < nbr_entities * 2 + 2; i++) {

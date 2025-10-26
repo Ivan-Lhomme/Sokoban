@@ -53,15 +53,16 @@ int is_loosing_corner(char ** level, entity * boxes[], entity * targets[]) {
 int is_loosing_wall(entity * boxes[], int count_t[]) {
     int count_b[4] = {0, 0, 0, 0};
     count_entity_wall(boxes, count_b);
-    int x = 0;
+
+    int i = 0;
     int win = -1;
 
-    while ((x < 4) && (win == -1)) {
-        if ((count_b[x] > 0) && (count_b[x] > count_t[x])) {
+    while ((i < 4) && (win == -1)) {
+        if ((count_b[i] > 0) && (count_b[i] > count_t[i])) {
             win = 0;
         }
 
-        x++;
+        i++;
     }
 
     return win;
