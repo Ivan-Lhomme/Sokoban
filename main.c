@@ -5,15 +5,28 @@
 #include "Functions/level.h"
 #include "Functions/entity.h"
 #include "Functions/win_defeat.h"
+#include "Functions/language.h"
 
 int main()
 {
 	system("clear");
-	printf("Bienvenue dans mon Sokoban fait maison !\n");
 
 	int win;									// use to check if the player win
 	int check;									// use to check if a plyer enter only a character
 	int nbr_entities;							// stores the amount of boxes and targets
+
+	int language;
+	printf("Which language do you want to use ? (FR : 0, EN : 1)\n");
+    scanf("%d", &language);
+
+	system("clear");
+
+	if (language == FRENCH) {
+		printf("Bienvenue dans mon Sokoban fait maison !\n");
+	} else {
+		printf("Welcome to my homemade Sokoban !\n");
+	}
+
 
 	int ** coordinates;							// stores all coodinates of all entities (player, boxes, targets)
 
@@ -27,6 +40,9 @@ int main()
 	entity ** targets = malloc(sizeof(*targets));
 
 	int count_t[4];								// stores the amount of targets near walls {top, bottom, left, right}
+
+	while (getchar() != '\n') {}
+
 
 	// loop of the whole game
 	do {
@@ -57,7 +73,11 @@ int main()
 			display_level(level);
 
 			do {
-				printf("Entrer une direction (zqsd) :\n");
+				if (language == FRENCH) {
+					printf("Entrer une direction (zqsd) :\n");
+				} else {
+					printf("Enter a direction (zqsd) :\n");
+				}
 				check = scanf("%c", &direction);
 
 				while (getchar() != '\n') {}	// delete all input in stdint
@@ -79,14 +99,26 @@ int main()
 		save_level(level);						// save the end of game in a file 
 
 		if (win == 1) {
-			printf("Bien joue, vous avez gagne !\n");
+			if (language == FRENCH) {
+				printf("Bien joue, vous avez gagne !\n");
+			} else {
+				printf("Good game, you win !\n");
+			}
 		} else if (win == 0) {
-			printf("Dommage, vous avez bloque la caisse.\n");
+			if (language == FRENCH) {
+				printf("Dommage, vous avez bloque la caisse.\n");
+			} else {
+				printf("Bad game, you stuck a box.\n");
+			}
 		} else {
-			printf("Petit probleme technique !\n");
+			printf("ERROR !\n");
 		}
 
-		printf("Si tu veux recommence entre 'y' sinon n'importe quel lettre.\n");
+		if (language == FRENCH) {
+			printf("Si tu veux recommence entre 'y' sinon n'importe quoi d'autre.\n");
+		} else {
+			printf("If you want to restart enter 'y' otherwise anything else.\n");
+		}
 		check = scanf("%c", &restart);
 
 		while (getchar() != '\n') {}

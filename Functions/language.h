@@ -1,0 +1,4 @@
+enum languages {
+    FRENCH,
+    ENGLISH
+};
